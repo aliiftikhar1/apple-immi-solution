@@ -1,10 +1,11 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, Suspense } from 'react';
 import FilterableTable from './filterabletable';
 import Cookies from 'js-cookie';
-import {jwtDecode} from 'jwt-decode';
+import jwtDecode from 'jwt-decode';
 import { useSearchParams } from 'next/navigation';
 
+// Define the CustomersPage component
 const CustomersPage = () => {
   const [data, setData] = useState([]);
   const [filetypedata, setfiletypedata] = useState([]);
@@ -24,25 +25,11 @@ const CustomersPage = () => {
     try {
       let response, result;
 
-      if ({country}) {
+      if (country) {
         if (userRole === 'manager') {
-          response = await fetch(`/api/visacountrymanager`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ country, userId }),
-          });
-        }
-        if (userRole ==='employee' || userRole === 'super admin') {
-          
-          response = await fetch(`/api/visacountry`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ country }),
-          });
+          response = await fetch(`/api/visacountrymanager?country=${country}&userId=${userId}`);
+        } else if (userRole === 'employee' || userRole === 'super admin') {
+          response = await fetch(`/api/visacountry?country=${country}`);
         }
         result = await response.json();
         setData(result);
@@ -63,7 +50,7 @@ const CustomersPage = () => {
     const token = Cookies.get('token');
     if (!token) {
       alert("Login to see the dashboard!");
-      // router.push('/admin');
+      // router.push('/admin'); // Uncomment if you use a router for redirection
     } else {
       const decodedToken = jwtDecode(token);
       setUserName(decodedToken.name);
@@ -80,21 +67,23 @@ const CustomersPage = () => {
   }, [country]);
 
   return (
-    <div className="container bg-white mx-auto">
-      {isLoading ? (
-        <div className="text-center text-2xl p-4">Loading...</div>
-      ) : (
-        <FilterableTable
-          data={data}
-          userRole={userRole}
-          userBranch={userBranch}
-          country = {country}
-          userId={userId}
-          filetypedata={filetypedata}
-          fetchData={fetchData}
-        />
-      )}
-    </div>
+    <Suspense fallback={<div className="text-center text-2xl p-4">Loading...</div>}>
+      <div className="container bg-white mx-auto">
+        {isLoading ? (
+          <div className="text-center text-2xl p-4">Loading...</div>
+        ) : (
+          <FilterableTable
+            data={data}
+            userRole={userRole}
+            userBranch={userBranch}
+            country={country}
+            userId={userId}
+            filetypedata={filetypedata}
+            fetchData={fetchData}
+          />
+        )}
+      </div>
+    </Suspense>
   );
 };
 
