@@ -2,7 +2,7 @@
 import { useEffect, useState, Suspense } from 'react';
 import FilterableTable from './filterabletable';
 import Cookies from 'js-cookie';
-import jwtDecode from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 import { useSearchParams } from 'next/navigation';
 
 // Define the CustomersPage component
