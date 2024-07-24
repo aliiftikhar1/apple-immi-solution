@@ -2,7 +2,7 @@
 import { useEffect, useState, Suspense } from 'react';
 import FilterableTable from './filterabletable';
 import Cookies from 'js-cookie';
-import {jwtDecode} from 'jwt-decode';
+import jwtDecode from 'jwt-decode';
 import { useSearchParams } from 'next/navigation';
 
 // Define the CustomersPage component
@@ -67,8 +67,8 @@ const CustomersPage = () => {
   }, [country]);
 
   return (
-    <Suspense fallback={<div className="text-center text-2xl p-4">Loading...</div>}>
-      <div className="container bg-white mx-auto">
+    <div className="container bg-white mx-auto">
+      <Suspense fallback={<div className="text-center text-2xl p-4">Loading...</div>}>
         {isLoading ? (
           <div className="text-center text-2xl p-4">Loading...</div>
         ) : (
@@ -82,8 +82,8 @@ const CustomersPage = () => {
             fetchData={fetchData}
           />
         )}
-      </div>
-    </Suspense>
+      </Suspense>
+    </div>
   );
 };
 
