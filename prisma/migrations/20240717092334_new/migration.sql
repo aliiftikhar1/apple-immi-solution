@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE `adminuser` ADD COLUMN `age` VARCHAR(191) NULL,
+    ADD COLUMN `city` VARCHAR(191) NULL,
+    ADD COLUMN `cnic` VARCHAR(191) NULL,
+    ADD COLUMN `counrty` VARCHAR(191) NULL;

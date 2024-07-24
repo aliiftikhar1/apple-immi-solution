@@ -1,0 +1,83 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+model Customer {
+  id                      Int        @id @default(autoincrement())
+  Visa_Type               String?
+  Visa_Country            String?
+  status                  String?
+  Full_Name               String?
+  imgurl                  String?
+  Passport_No             String?
+  CNIC_No                 String?
+  Father_Name             String?
+  Nationality             String?
+  City                    String?
+  Address                 String?
+  Phone_No1               String?
+  Phone_No2               String?
+  Gender                  String?
+  Age                     String?
+  Email                   String
+  Interested_Country      String?
+  Educational_Activity    String? 
+  List_degree_completed   String?
+  Marital_Status          String?
+  NTN_No                  String?
+  Employment_Status       String?
+  Parents_CNIC_No         String?
+  Uploaded_Files          String?
+  Birth_Place             String?
+  Note                    String?
+  addedby                 Int?
+  createdAt               DateTime   @default(now())
+  updatedAt               DateTime   @updatedAt
+  adminUser               AdminUser? @relation(fields: [addedby], references: [id])  // Relation field
+}
+
+model images {
+  id        Int      @id @default(autoincrement())
+  user      String   
+  imgurl    String
+  type      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AdminUser {
+  id        Int      @id @default(autoincrement())
+  name      String
+  age       String?
+  cnic      String?
+  country   String?
+  city      String?
+  branch    String
+  role      String
+  imgurl    String?
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  customers Customer[] // Relation field
+}
+
+model Branches {
+  id        Int      @id @default(autoincrement())
+  title     String
+  address   String
+  city      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Filetype {
+  id        Int      @id @default(autoincrement())
+  title     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
