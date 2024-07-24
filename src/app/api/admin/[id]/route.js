@@ -41,7 +41,8 @@ export async function PUT(request, { params }) {
 
 
     
-    const response = await fetch('https://admin.applelegal.co/uploadImage.php', { // Replace with your actual endpoint URL
+    const response = await fetch('https://admin.applelegal.co/uploadImage.php', {
+      mode:"no-cors", // Replace with your actual endpoint URL
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
