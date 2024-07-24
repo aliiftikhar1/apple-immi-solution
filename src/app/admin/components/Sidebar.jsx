@@ -53,7 +53,7 @@ const Sidebar = ({ setActiveComponent }) => {
   };
 
   const handleCountryClick = (country) => {
-    router.push(`/admin/pages/visacountry?country=${country}`);
+    router.push(`/admin/pages/home`);
   };
 
   return (
