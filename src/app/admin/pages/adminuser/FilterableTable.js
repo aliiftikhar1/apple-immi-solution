@@ -215,7 +215,7 @@ const FilterableTable = ({ data, fetchData,userRole, userBranch }) => {
                 <h2 className="text-2xl font-semibold mb-6">Preview</h2>
                 
                 <div className='flex justify-center mb-4'>
-                  <img src={ `https://appstore.store2u.ca/uploads/`+ newItem.imgurl || 'https://static.vecteezy.com/system/resources/thumbnails/036/594/092/small_2x/man-empty-avatar-photo-placeholder-for-social-networks-resumes-forums-and-dating-sites-male-and-female-no-photo-images-for-unfilled-user-profile-free-vector.jpg'}  alt="Profile" className="rounded-full shadow-md h-40 w-40 object-cover"/>
+                  <img src={ `https://admin.applelegal.co/uploads`+ newItem.imgurl || 'https://static.vecteezy.com/system/resources/thumbnails/036/594/092/small_2x/man-empty-avatar-photo-placeholder-for-social-networks-resumes-forums-and-dating-sites-male-and-female-no-photo-images-for-unfilled-user-profile-free-vector.jpg'}  alt="Profile" className="rounded-full shadow-md h-40 w-40 object-cover"/>
                   </div>
                 <div className="space-y-4">
                   <p><strong>Name:</strong> {newItem.name}</p>

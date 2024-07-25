@@ -19,7 +19,7 @@ const Sidebar = ({ setActiveComponent }) => {
     branches: false,
     adminUsers: false,
     filetypes: false,
-    clientCountries: false, // Add clientCountries to the state
+    clientCountries: false,
   });
 
   const [userName, setUserName] = useState('');
@@ -30,13 +30,13 @@ const Sidebar = ({ setActiveComponent }) => {
   useEffect(() => {
     const token = Cookies.get('token');
     if (!token) {
-      alert("Login to see the dashboard!");
-      // router.push('/admin');
+      alert('Login to see the dashboard!');
+      router.push('/admin');
     } else {
       const decodedToken = jwtDecode(token);
       setUserName(decodedToken.name);
       setUserEmail(decodedToken.email);
-      setUserRole(decodedToken.role); 
+      setUserRole(decodedToken.role);
     }
   }, []);
 
@@ -49,37 +49,40 @@ const Sidebar = ({ setActiveComponent }) => {
 
   const handleLogout = () => {
     Cookies.remove('token');
-    window.location.href = '/';
+    window.location.href = '/admin';
   };
 
   const handleCountryClick = (country) => {
-    router.push(`/admin/pages/home`);
+    router.push(`/admin/pages/visacountry/${country}`);
   };
 
   return (
     <div className="bg-gray-800 text-white w-64 min-h-screen flex flex-col">
       <div className="px-2 text-center">
         <div className="flex items-center justify-center mb-3 mt-2 ml-4">
-          <img className='w-[150px] rounded px-6 py-2'
+          <img
+            className="w-[150px] rounded px-6 py-2"
             src="/assets/apple logo.png"
-          ></img>
+            alt="Logo"
+          />
         </div>
-        <h2 className="text-lg font-bold ">{userEmail}</h2>
+        <h2 className="text-lg font-bold">{userEmail}</h2>
         <h2 className="text-lg font-semibold text-yellow-300">{userRole}</h2>
         <p className="text-green-400">● Online</p>
       </div>
       <div className="p-4 border-t border-gray-700">
         <ul className="mt-4 space-y-2">
           <li>
-            <a href='/admin/pages/home'>
+            <a href="/admin/pages/home">
               <button className="flex items-center p-2 hover:bg-blue-700 rounded">
                 <HomeIcon className="h-5 w-5" />
                 <span className="ml-2">Home</span>
               </button>
             </a>
           </li>
-
-          { (userRole === 'manager' || userRole === 'employee' || userRole ==='super admin') && (
+          {(userRole === 'manager' ||
+            userRole === 'employee' ||
+            userRole === 'super admin') && (
             <li>
               <button
                 className="flex items-center w-full p-2 hover:bg-blue-700 rounded focus:outline-none"
@@ -92,7 +95,7 @@ const Sidebar = ({ setActiveComponent }) => {
               {isDropdownOpen.customers && (
                 <ul className="ml-8 mt-2 space-y-2">
                   <li>
-                    <a href='/admin/pages/customers'>
+                    <a href="/admin/pages/customers">
                       <button className="flex w-full items-center p-2 hover:bg-blue-700 rounded">
                         <span className="ml-2">View Files</span>
                       </button>
@@ -102,8 +105,7 @@ const Sidebar = ({ setActiveComponent }) => {
               )}
             </li>
           )}
-
-          {(userRole === 'manager' || userRole ==='super admin') && (
+          {(userRole === 'manager' || userRole === 'super admin') && (
             <>
               <li>
                 <button
@@ -117,7 +119,7 @@ const Sidebar = ({ setActiveComponent }) => {
                 {isDropdownOpen.adminUsers && (
                   <ul className="ml-8 mt-2 space-y-2">
                     <li>
-                      <a href='/admin/pages/adminuser'>
+                      <a href="/admin/pages/adminuser">
                         <button className="flex w-full items-center p-2 hover:bg-blue-700 rounded">
                           <span className="ml-2">View Admin Users</span>
                         </button>
@@ -128,8 +130,7 @@ const Sidebar = ({ setActiveComponent }) => {
               </li>
             </>
           )}
-
-          {(userRole === 'super admin') && (
+          {userRole === 'super admin' && (
             <>
               <li>
                 <button
@@ -143,7 +144,7 @@ const Sidebar = ({ setActiveComponent }) => {
                 {isDropdownOpen.branches && (
                   <ul className="ml-8 mt-2 space-y-2">
                     <li>
-                      <a href='/admin/pages/branches'>
+                      <a href="/admin/pages/branches">
                         <button className="flex w-full items-center p-2 hover:bg-blue-700 rounded">
                           <span className="ml-2">View Branches</span>
                         </button>
@@ -164,7 +165,7 @@ const Sidebar = ({ setActiveComponent }) => {
                 {isDropdownOpen.filetypes && (
                   <ul className="ml-8 mt-2 space-y-2">
                     <li>
-                      <a href='/admin/pages/filetype'>
+                      <a href="/admin/pages/filetype">
                         <button className="flex w-full items-center p-2 hover:bg-blue-700 rounded">
                           <span className="ml-2">View Filetypes</span>
                         </button>
@@ -175,8 +176,9 @@ const Sidebar = ({ setActiveComponent }) => {
               </li>
             </>
           )}
-
-          { (userRole === 'manager' || userRole ==='super admin' || userRole ==='employee') && (
+          {(userRole === 'manager' ||
+            userRole === 'super admin' ||
+            userRole === 'employee') && (
             <li>
               <button
                 className="flex items-center w-full p-2 hover:bg-blue-700 rounded focus:outline-none"
@@ -207,9 +209,9 @@ const Sidebar = ({ setActiveComponent }) => {
                   <li>
                     <button
                       className="flex w-full items-center p-2 hover:bg-blue-700 rounded"
-                      onClick={() => handleCountryClick('UK')}
+                      onClick={() => handleCountryClick('USA')}
                     >
-                      <span className="ml-2">UK</span>
+                      <span className="ml-2">USA</span>
                     </button>
                   </li>
                   <li>
@@ -232,7 +234,6 @@ const Sidebar = ({ setActiveComponent }) => {
               )}
             </li>
           )}
-
           <li>
             <button
               className="flex items-center w-full p-2 hover:bg-blue-700 rounded focus:outline-none"

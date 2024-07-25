@@ -1,7 +1,23 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../util/prisma';
+import { header } from 'express/lib/request';
 
 export async function POST(request) {
+  if (request.method === 'OPTIONS') {
+    const headers = {
+      'Access-Control-Allow-Origin': '*', // Change to your frontend URL in production
+      'Access-Control-Allow-Methods': 'OPTIONS, POST, GET',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    };
+    return new Response(null, { status: 204, headers });
+  } if (request.method === 'OPTIONS') {
+    const headers = {
+      'Access-Control-Allow-Origin': '*', // Change to your frontend URL in production
+      'Access-Control-Allow-Methods': 'OPTIONS, POST, GET',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    };
+    return new Response(null, { status: 204, headers });
+  }
   try {
     const data = await request.json();
     const { title, city, address } = data;
@@ -32,7 +48,7 @@ export async function POST(request) {
 
 export async function GET() {
   try {
-    const branches = await prisma.Branches.findMany();
+    const branches = await prisma.branches.findMany();
     return NextResponse.json(branches);
   } catch (error) {
     console.error('Error fetching branches:', error);
@@ -44,6 +60,7 @@ export async function GET() {
       },
       {
         status: 500,
+        headers:header
       }
     );
   }

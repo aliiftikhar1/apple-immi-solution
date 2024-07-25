@@ -1,9 +1,27 @@
 import { NextResponse } from 'next/server';
 import prisma from '../../util/prisma';
 import bcrypt from 'bcryptjs'; // Import bcryptjs
+import { header } from 'express/lib/request';
 
 // POST request to create a new admin user
 export async function POST(request) {
+
+  if (request.method === 'OPTIONS') {
+    const headers = {
+      'Access-Control-Allow-Origin': '*', // Change to your frontend URL in production
+      'Access-Control-Allow-Methods': 'OPTIONS, POST, GET',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    };
+    return new Response(null, { status: 204, headers });
+  } if (request.method === 'OPTIONS') {
+    const headers = {
+      'Access-Control-Allow-Origin': '*', // Change to your frontend URL in production
+      'Access-Control-Allow-Methods': 'OPTIONS, POST, GET',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    };
+    return new Response(null, { status: 204, headers });
+  }
+
   try {
     const body = await request.json();
     const { name, age, cnic, country, city, branch, role, email, password, imgurl, base64 } = body;
@@ -71,7 +89,9 @@ export async function GET() {
         status: false,
         error: error.message,
       },
-      { status: 500 }
+      { status: 500,
+        headers: header
+       }
     );
   }
 }
