@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { FaTimes, FaEdit, FaTrash, FaEye } from 'react-icons/fa';
 import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
@@ -43,7 +43,7 @@ const AdminDetailsCard = ({ admin, handleEditAdmin, handleDeleteAdmin }) => {
       console.log("User name is: " + decodedToken.name);
       console.log("User image link is: " + decodedToken.image);
     }
-    fetchData();
+  
   }, []);
 
   return (
@@ -85,6 +85,7 @@ const AdminDetailsCard = ({ admin, handleEditAdmin, handleDeleteAdmin }) => {
                   <div className="flex justify-start mt-4 space-x-2">
                   {
   (userRole !== 'manager' || admin.role !== 'super admin') && (
+    <>
     <button
       className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none flex items-center"
       onClick={() => {
@@ -94,17 +95,19 @@ const AdminDetailsCard = ({ admin, handleEditAdmin, handleDeleteAdmin }) => {
     >
       <FaEdit className="mr-2" /> Edit
     </button>
+    <button
+    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none flex items-center"
+    onClick={() => {
+      handleDeleteAdmin(admin.id);
+      closeModal();
+    }}
+  >
+    <FaTrash className="mr-2" /> Delete
+  </button>
+  </>
   )
 }
-                <button
-                  className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none flex items-center"
-                  onClick={() => {
-                    handleDeleteAdmin(admin.id);
-                    closeModal();
-                  }}
-                >
-                  <FaTrash className="mr-2" /> Delete
-                </button>
+                
               </div>
                 </div>
                 <div>

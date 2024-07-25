@@ -79,7 +79,7 @@ const UserDetailsCard = ({ item, handleEditItem, handleDeleteItem }) => {
         <body>
           <div class="print-content">
             <div class="header">
-              <img src="https://admin.applelegal.co/uploads${item.imgurl}" alt="User Profile" />
+              <img src="https://admin.applelegal.co/uploads/${item.imgurl}" alt="User Profile" />
               <div class="details">
                 <h2>${item.Full_Name}</h2>
                 <p>Branch: ${item.branch}</p>
@@ -130,7 +130,7 @@ const UserDetailsCard = ({ item, handleEditItem, handleDeleteItem }) => {
     <div className="bg-white rounded-xl shadow-md hover:shadow-lg overflow-hidden relative p-4">
       <div className="flex justify-center items-center p-4 border-b">
         <div className='flex flex-col justify-center items-center'>
-          <img className='w-[150px] h-[150px] rounded-full mr-4 object-cover' src={`https://admin.applelegal.co/uploads${item.imgurl}`} alt="User Profile" />
+          <img className='w-[150px] h-[150px] rounded-full mr-4 object-cover' src={`https://admin.applelegal.co/uploads/${item.imgurl}`} alt="User Profile" />
           <div className='text-center py-2'>
             <h2 className="text-2xl font-semibold">{item.Full_Name}</h2>
             <p className="text-sm text-gray-500 flex justify-center items-center">{item.status}
@@ -175,7 +175,7 @@ const UserDetailsCard = ({ item, handleEditItem, handleDeleteItem }) => {
             </button>
             <div id={`print-content-${item.id}`} className="hidden print:block">
               <div class="header">
-                <img src={`https://admin.applelegal.co/uploads${item.imgurl}`} alt="User Profile" style={{ objectFit: 'cover' }} />
+                <img src={`https://admin.applelegal.co/uploads/${item.imgurl}`} alt="User Profile" style={{ objectFit: 'cover' }} />
                 <h2>${item.Full_Name}</h2>
               </div>
               <div class="grid">
@@ -242,13 +242,13 @@ const UserDetailsCard = ({ item, handleEditItem, handleDeleteItem }) => {
               <div className="grid grid-cols-2 gap-4">
     {uploadedFiles.map((file, index) => (
       <div key={index} className="flex flex-col items-center border rounded p-2">
-        <img src={`https://admin.applelegal.co/uploads${file.imgurl}`} alt={file.image_name} className="w-full h-48 object-cover mb-2" />
+        <img src={`https://admin.applelegal.co/uploads/${file.imgurl}`} alt={file.image_name} className="w-full h-48 object-cover mb-2" />
         <p className="text-sm">{file.image_name}</p>
         <div className="flex mt-2">
-          <a href={`https://admin.applelegal.co/uploads${file.imgurl}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline px-2">
+          <a href={`https://admin.applelegal.co/uploads/${file.imgurl}`} target="_blank" rel="noopener noreferrer" className="text-blue-500 hover:underline px-2">
             <FaEye />
           </a>
-          <button onClick={() => handleDownload(`https://admin.applelegal.co/uploads${file.imgurl}`, file.imgurl)} className="text-green-500 hover:underline px-2">
+          <button onClick={() => handleDownload(`https://admin.applelegal.co/uploads/${file.imgurl}`, file.imgurl)} className="text-green-500 hover:underline px-2">
       <FaDownload />
           </button>
         </div>
