@@ -1,7 +1,21 @@
 import React, { useState } from 'react';
 import { FaTimes, FaEdit, FaTrash, FaEye } from 'react-icons/fa';
+import Cookies from 'js-cookie';
+import { jwtDecode } from 'jwt-decode';
 
 const AdminDetailsCard = ({ admin, handleEditAdmin, handleDeleteAdmin }) => {
+
+ //----------------------------------------------
+ const [userId, setUserId] = useState('');
+ const [userName, setUserName] = useState('');
+ const [userEmail, setUserEmail]= useState('')
+ const [userImage, setUserImage]= useState('')
+ const [userBranch, setUserBranch] = useState('');
+ const [userRole, setUserRole]= useState('')
+ 
+//-------------------------------------------------
+
+
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const openModal = () => {
@@ -11,6 +25,26 @@ const AdminDetailsCard = ({ admin, handleEditAdmin, handleDeleteAdmin }) => {
   const closeModal = () => {
     setIsModalOpen(false);
   };
+  
+  useEffect(() => {
+    const token = Cookies.get('token');
+    if (!token) {
+      alert("Login to see the dashboard!");
+      // router.push('/admin');
+    } else {
+      const decodedToken = jwtDecode(token);
+      setUserName(decodedToken.name); 
+      setUserImage(decodedToken.image); 
+      setUserEmail(decodedToken.email); 
+      setUserBranch(decodedToken.branch); 
+      setUserId(decodedToken.id); 
+      setUserRole(decodedToken.role); 
+     
+      console.log("User name is: " + decodedToken.name);
+      console.log("User image link is: " + decodedToken.image);
+    }
+    fetchData();
+  }, []);
 
   return (
     <div className="bg-white rounded-xl  shadow-md hover:shadow-lg overflow-hidden relative p-4">
@@ -49,15 +83,19 @@ const AdminDetailsCard = ({ admin, handleEditAdmin, handleDeleteAdmin }) => {
                     </tbody>
                   </table>
                   <div className="flex justify-start mt-4 space-x-2">
-                <button
-                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none flex items-center"
-                  onClick={() => {
-                    handleEditAdmin(admin);
-                    closeModal();
-                  }}
-                >
-                  <FaEdit className="mr-2" /> Edit
-                </button>
+                  {
+  (userRole !== 'manager' || admin.role !== 'super admin') && (
+    <button
+      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 focus:outline-none flex items-center"
+      onClick={() => {
+        handleEditAdmin(admin);
+        closeModal();
+      }}
+    >
+      <FaEdit className="mr-2" /> Edit
+    </button>
+  )
+}
                 <button
                   className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 focus:outline-none flex items-center"
                   onClick={() => {
