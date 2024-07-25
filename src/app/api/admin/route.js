@@ -32,7 +32,7 @@ export async function POST(request) {
     const hashedPassword = bcrypt.hashSync(password, salt); // Hash the password
 
     
-    const response = await fetch('https://appstore.store2u.ca/uploadImage.php', { // Replace with your actual endpoint URL
+    const response = await fetch('https://admin.applelegal.co/uploadImage.php', { // Replace with your actual endpoint URL
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
