@@ -29,7 +29,7 @@ const FilterableTable = ({ data, fetchData,userRole, userBranch }) => {
   useEffect(() => {
     let filtered = data;
     if (userRole === 'manager') {
-      filtered = filtered.filter(item => item.branch === userBranch);
+      filtered = filtered.filter(item => (item.branch === userBranch && item.branch !== 'super admin'));
       console.log(filtered)
       console.log(userBranch)
       console.log(userRole)
