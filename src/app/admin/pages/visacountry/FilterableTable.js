@@ -30,22 +30,23 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
     if (userRole === 'employee') {
       filtered = filtered.filter(item => item.addedby === userId);
     }
-    if (userRole === 'manager') {
-      fetch(`/api/branchuser/${userId}`)
-        .then(response => response.json())
-        .then(branchUsers => {
-          setFilteredData(
-            branchUsers.filter(item =>
-              Object.values(item).some(val =>
-                String(val).toLowerCase().includes(filter.toLowerCase())
-              )
-            )
-          );
-        })
-        .catch(error => {
-          console.error('Error fetching branch users:', error);
-        });
-    } else {
+    // if (userRole === 'manager') {
+    //   fetch(`/api/branchuser/${userId}`)
+    //     .then(response => response.json())
+    //     .then(branchUsers => {
+    //       setFilteredData(
+    //         branchUsers.filter(item =>
+    //           Object.values(item).some(val =>
+    //             String(val).toLowerCase().includes(filter.toLowerCase())
+    //           )
+    //         )
+    //       );
+    //     })
+    //     .catch(error => {
+    //       console.error('Error fetching branch users:', error);
+    //     });
+    // } 
+    else {
       setFilteredData(
         filtered.filter(item =>
           Object.values(item).some(val =>

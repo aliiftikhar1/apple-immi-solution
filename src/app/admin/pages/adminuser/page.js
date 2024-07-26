@@ -53,7 +53,7 @@ const AdminPage = () => {
   }, []);
 
   return (
-    <div className="container bg-white mx-auto  ">
+    <div className="container bg-white mx-auto ">
       {isLoading ? (
         <div className="text-center text-2xl p-4">Loading...</div>
       ) : (
