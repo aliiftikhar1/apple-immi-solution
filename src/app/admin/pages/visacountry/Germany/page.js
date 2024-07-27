@@ -2,7 +2,7 @@
 import { useEffect, useState } from 'react';
 import FilterableTable from '../FilterableTable';
 import Cookies from 'js-cookie';
-import jwtDecode from 'jwt-decode';
+import {jwtDecode} from 'jwt-decode';
 
 const CustomersPage = () => {
   const [data, setData] = useState([]);
