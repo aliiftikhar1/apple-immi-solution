@@ -27,27 +27,29 @@ const FilterableTable = ({ data, fetchData,userRole, userBranch }) => {
   const [branches, setBranches] = useState([]);
 
   useEffect(() => {
-    setFilteredData(data.filter(item =>
-      Object.values(item).some(val => 
-        String(val).toLowerCase().includes(filter.toLowerCase())
-      )
-    ));
-    
-    fetchBranches();
-
-    
-  }, []);
-
-
-  let filtered = data;
+    let filtered = data;
     if (userRole === 'manager') {
-      filtered = filtered.filter(item => (item.branch === userBranch ));
+      filtered = filtered.filter(item => (item.branch === userBranch && item.branch !== 'super admin'));
       console.log(filtered)
       console.log(userBranch)
       console.log(userRole)
       setFilteredData(filtered)
+      
+    }
+    if (userRole === 'super admin') {
+      setFilteredData(data.filter(item =>
+        Object.values(item).some(val => 
+          String(val).toLowerCase().includes(filter.toLowerCase())
+        )
+      ));
+      console.log(filtered)
+      console.log(userBranch)
+      console.log(userRole)
+      
     }
     
+    fetchBranches();
+  }, [filter, data, userBranch, userRole]);
 
   const fetchBranches = async () => {
     try {
