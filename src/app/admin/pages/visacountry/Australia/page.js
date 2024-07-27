@@ -2,25 +2,28 @@
 import { useEffect, useState } from 'react';
 import FilterableTable from '../FilterableTable';
 import Cookies from 'js-cookie';
-import { jwtDecode } from 'jwt-decode';
+import jwtDecode from 'jwt-decode';
 
 const CustomersPage = () => {
   const [data, setData] = useState([]);
-  const [filetypedata,setfiletypedata] = useState([]);
+  const [filetypedata, setfiletypedata] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
-  // -------------------------------------
   const [userId, setUserId] = useState('');
   const [userName, setUserName] = useState('');
-  const [userEmail, setUserEmail]= useState('')
-  const [userImage, setUserImage]= useState('')
+  const [userEmail, setUserEmail] = useState('');
+  const [userImage, setUserImage] = useState('');
   const [userBranch, setUserBranch] = useState('');
-  const [userRole, setUserRole]= useState('')
-  
+  const [userRole, setUserRole] = useState('');
 
   const fetchData = async (userRole) => {
     try {
-      const response = await fetch('/api/visacountry/Australia');
+      let response;
+      if (userRole === 'manager') {
+        response = await fetch(`/api/visacountrymanager?country=Australia&userId=${userId}`);
+      } else {
+        response = await fetch('/api/visacountry/Australia');
+      }
       const result = await response.json();
       setData(result);
       const response2 = await fetch('/api/filetype');
@@ -33,8 +36,6 @@ const CustomersPage = () => {
     }
   };
 
- 
-  
   useEffect(() => {
     const token = Cookies.get('token');
     if (!token) {
@@ -51,15 +52,24 @@ const CustomersPage = () => {
      
       console.log("User name is: " + decodedToken.name);
       console.log("User image link is: " + decodedToken.image);
+
+      fetchData(decodedToken.role); // Pass the userRole to fetchData
     }
-    fetchData();
   }, []);
+
   return (
-    <div className="container bg-white mx-auto  ">
+    <div className="container bg-white mx-auto">
       {isLoading ? (
         <div className="text-center text-2xl p-4">Loading...</div>
       ) : (
-        <FilterableTable data={data} userRole={userRole} userBranch={userBranch} userId={userId} filetypedata={filetypedata} fetchData={fetchData} />
+        <FilterableTable 
+          data={data} 
+          userRole={userRole} 
+          userBranch={userBranch} 
+          userId={userId} 
+          filetypedata={filetypedata} 
+          fetchData={() => fetchData(userRole)} // Ensure fetchData gets called with the correct userRole
+        />
       )}
     </div>
   );

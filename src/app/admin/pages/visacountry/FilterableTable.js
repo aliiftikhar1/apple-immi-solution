@@ -24,29 +24,13 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
   const [previewurl, setpreviewurl] = useState('');
   //-----------------------------------------
 
-  useEffect(() => {
-    let filtered = data;
-
+  let filtered = data;
     if (userRole === 'employee') {
       filtered = filtered.filter(item => item.addedby === userId);
+      setFilteredData(filtered);
     }
-    // if (userRole === 'manager') {
-    //   fetch(`/api/branchuser/${userId}`)
-    //     .then(response => response.json())
-    //     .then(branchUsers => {
-    //       setFilteredData(
-    //         branchUsers.filter(item =>
-    //           Object.values(item).some(val =>
-    //             String(val).toLowerCase().includes(filter.toLowerCase())
-    //           )
-    //         )
-    //       );
-    //     })
-    //     .catch(error => {
-    //       console.error('Error fetching branch users:', error);
-    //     });
-    // } 
-    else {
+  useEffect(() => {
+    
       setFilteredData(
         filtered.filter(item =>
           Object.values(item).some(val =>
@@ -54,14 +38,19 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
           )
         )
       );
-    }
+    
   }, [filter, data, filetypes, userRole, userId, userBranch]);
 
   //------------------------Image  Upload----------------
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
+    if (selectedFile.size > 200 * 1024) { // 200KB in bytes
+      alert('File size must be less than 200KB');
+      return;
+    }
     setFile(selectedFile);
   };
+  
 
   const handleTypeChange = (e) => {
     setType(e.target.value);
@@ -107,6 +96,7 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
       if (!response.ok) {
         throw new Error(result.error || 'Failed to add/update item');
       }
+      setImages('');
       fetchData();
       setIsModalOpen(false);
     } catch (error) {
@@ -283,6 +273,7 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
                           className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                           required
                         >
+                          <option key='' value='' disabled>Select Visa Type</option>
                           {visaTypes.map(type => (
                             <option key={type} value={type}>{type}</option>
                           ))}
@@ -296,6 +287,7 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
                           className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                           required
                         >
+                          <option key='' value='' disabled>Select Visa Country</option>
                           {visaCountries.map(country => (
                             <option key={country} value={country}>{country}</option>
                           ))}
@@ -305,7 +297,7 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
                       <div>
                         <label className="block text-sm font-medium text-gray-700">Status</label>
                         <select value={currentItem?.status} onChange={(e) => setCurrentItem({ ...currentItem, status: e.target.value })} className="p-2 border border-gray-300 rounded w-full">
-                          <option value="" disabled>Select</option>
+                        <option  value='' selected disabled>Select Status</option>
                           <option value="pending">Pending</option>
                           <option value="initiated">Initiated</option>
                           <option value="processing">Processing</option>
@@ -436,15 +428,19 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
                         />
                       </div>
                       <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700">Gender</label>
-                        <input
-                          type="text"
-                          value={currentItem?.Gender || ''}
-                          onChange={(e) => setCurrentItem({ ...currentItem, Gender: e.target.value })}
-                          className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          required
-                        />
-                      </div>
+  <label className="block text-sm font-medium text-gray-700">Gender</label>
+  <select
+    value={currentItem?.Gender || ''}
+    onChange={(e) => setCurrentItem({ ...currentItem, Gender: e.target.value })}
+    className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+    required
+  >
+    <option value="" disabled>Select Gender</option>
+    <option value="Male">Male</option>
+    <option value="Female">Female</option>
+  </select>
+</div>
+
                       <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700">Age</label>
                         <input
@@ -495,15 +491,19 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
                     <div className={`absolute left-1 w-6 h-6 rounded-full border-black border-2 ml-[1.5px] ${getSectionCompletion('otherDetails') ? 'bg-green-500' : 'bg-gray-300'}`}></div>
                     <h3 className="text-xl font-bold">Other Information</h3>
                     <div className="grid grid-cols-3 gap-4">
-                      <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700">Marital Status</label>
-                        <input
-                          type="text"
-                          value={currentItem?.Marital_Status || ''}
-                          onChange={(e) => setCurrentItem({ ...currentItem, Marital_Status: e.target.value })}
-                          className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        />
-                      </div>
+                    <div className="mb-4">
+  <label className="block text-sm font-medium text-gray-700">Marital Status</label>
+  <select
+    value={currentItem?.Marital_Status || ''}
+    onChange={(e) => setCurrentItem({ ...currentItem, Marital_Status: e.target.value })}
+    className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+  >
+    <option value="" disabled>Select Marital Status</option>
+    <option value="Single">Single</option>
+    <option value="Married">Married</option>
+  </select>
+</div>
+
                       <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700">NTN No</label>
                         <input
@@ -561,6 +561,7 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
                       <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700">Select Image Type</label>
                         <select value={type} onChange={handleTypeChange} className="mt-1 p-2 border border-gray-300 rounded w-full">
+                        <option key='' value='' selected>Select image type</option>
                         {filetypes.map((fileType, index) => (
           <option key={index} value={fileType.title}>
             {fileType.title}
@@ -578,17 +579,20 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
                       >
                         Add Image
                       </button>
-                      <div>
-                        <h2 className="text-xl mb-4">Selected Images</h2>
-                        <ul className="list-disc pl-5">
-                          {images.map((img, index) => (
-                            <li key={index} className="flex justify-between items-center">
-                              <strong>Type:</strong> {img.type} - <img src={img.base64} alt={img.type} className="w-16 h-16 inline-block" />
-                              <button onClick={() => handleRemoveImage(index)} className="text-red-500 hover:text-red-700 ml-4">Remove</button>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
+                      {images.length > 0 && (
+  <div>
+    <h2 className="text-xl mb-4">Selected Images</h2>
+    <ul className="list-disc pl-5">
+      {images.map((img, index) => (
+        <li key={index} className="flex justify-between items-center">
+          <strong>Type:</strong> {img.type} - <img src={img.base64} alt={img.type} className="w-16 h-16 inline-block" />
+          <button onClick={() => handleRemoveImage(index)} className="text-red-500 hover:text-red-700 ml-4">Remove</button>
+        </li>
+      ))}
+    </ul>
+  </div>
+)}
+
                     </div>
                     <div className="flex justify-end space-x-2 mt-4">
                       <button
