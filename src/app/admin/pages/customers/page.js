@@ -47,7 +47,7 @@ const CustomersPage = () => {
       setUserEmail(decodedToken.email); 
       setUserBranch(decodedToken.branch); 
       setUserId(decodedToken.id); 
-      setUserRole(decodedToken.role); 
+      setUserRole(decodedToken.role);
      
       console.log("User name is: " + decodedToken.name);
       console.log("User image link is: " + decodedToken.image);

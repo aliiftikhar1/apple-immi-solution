@@ -16,16 +16,20 @@ const CustomersPage = () => {
   const [userBranch, setUserBranch] = useState('');
   const [userRole, setUserRole] = useState('');
 
-  const fetchData = async (userRole) => {
+  const fetchData = async (userRole, userId) => {
     try {
       let response;
       if (userRole === 'manager') {
         response = await fetch(`/api/visacountrymanager?country=Germany&userId=${userId}`);
+        console.log(response)
+        const result = await response.json();
+      setData(result);
       } else {
         response = await fetch('/api/visacountry/Germany');
-      }
-      const result = await response.json();
+        const result = await response.json();
       setData(result);
+      }
+      console.log("Data is:" + data)
       const response2 = await fetch('/api/filetype');
       const result2 = await response2.json();
       setfiletypedata(result2);
@@ -51,9 +55,10 @@ const CustomersPage = () => {
       setUserRole(decodedToken.role); 
      
       console.log("User name is: " + decodedToken.name);
+      console.log("na pooch yar: " + decodedToken.id);
       console.log("User image link is: " + decodedToken.image);
 
-      fetchData(decodedToken.role); // Pass the userRole to fetchData
+      fetchData(decodedToken.role, decodedToken.id); // Pass both userRole and userId to fetchData
     }
   }, []);
 
@@ -68,7 +73,7 @@ const CustomersPage = () => {
           userBranch={userBranch} 
           userId={userId} 
           filetypedata={filetypedata} 
-          fetchData={() => fetchData(userRole)} // Ensure fetchData gets called with the correct userRole
+          fetchData={() => fetchData(userRole, userId)} // Ensure fetchData gets called with the correct userRole and userId
         />
       )}
     </div>

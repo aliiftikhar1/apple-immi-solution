@@ -4,12 +4,12 @@ import { FaDownload, FaTimes } from 'react-icons/fa';
 import UserDetailsCard from './components/card';
 
 const visaTypes = ["Skilled Immigration", "Business Immigration", "Student Immigration", "Citizenship Immigration", "Recruitment", "Citizenship by Investment"];
-const visaCountries = ["UK", "USA", "Canada", "Australia","Ireland", "Hungary", "Italy","Europe", "Finland", "France", "Poland", "Germany", "Sweden", "Austria", "Portugal", "Netherlands", "Belgium", "Norway"];
+const visaCountries = ["UK", "USA", "Canada", "Australia", "Ireland", "Hungary", "Italy", "Europe", "Finland", "France", "Poland", "Germany", "Sweden", "Austria", "Portugal", "Netherlands", "Belgium", "Norway"];
 
 const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fetchData }) => {
   const [filter, setFilter] = useState('');
-  const [filteredData, setFilteredData] = useState(data);
-  const [filetypes, setfiletypes] = useState(filetypedata);
+  const [filteredData, setFilteredData] = useState([]);
+  const [filetypes, setFiletypes] = useState(filetypedata || []);
   const [isSearchVisible, setIsSearchVisible] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -21,27 +21,22 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
   const [file, setFile] = useState(null);
   //--------------------------------------
 
-  const [previewurl, setpreviewurl] = useState('');
+  const [previewurl, setPreviewurl] = useState('');
   //-----------------------------------------
 
   useEffect(() => {
-    let filtered = data;
     if (userRole === 'employee') {
-      filtered = filtered.filter(item => item.addedby === userId);
-      setFilteredData(filtered);
-    }
-     else {
-      setFilteredData(
-        filtered.filter(item =>
-          Object.values(item).some(val =>
-            String(val).toLowerCase().includes(filter.toLowerCase())
-          )
+      setFilteredData(data.filter(item => item.addedby === userId));
+    } else {
+      setFilteredData(data.filter(item =>
+        Object.values(item).some(val =>
+          String(val).toLowerCase().includes(filter.toLowerCase())
         )
-      );
+      ));
     }
-  }, [filter, data, filetypes, userRole, userId, userBranch]);
+  }, [filter, data, userRole, userId]);
 
-  //------------------------Image  Upload----------------
+  //------------------------Image Upload----------------
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
     if (selectedFile.size > 200 * 1024) { // 200KB in bytes
@@ -50,7 +45,6 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
     }
     setFile(selectedFile);
   };
-  
 
   const handleTypeChange = (e) => {
     setType(e.target.value);
@@ -73,7 +67,7 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
   };
 
   const handleRemoveImage = (index) => {
-    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+    setImages(prevImages => prevImages.filter((_, i) => i !== index));
   };
 
   //------------------------------------------------------
@@ -96,7 +90,7 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
       if (!response.ok) {
         throw new Error(result.error || 'Failed to add/update item');
       }
-      setImages('');
+      setImages([]);
       fetchData();
       setIsModalOpen(false);
     } catch (error) {
@@ -157,9 +151,7 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
     const file = e.target.files[0];
     if (file) {
       const imageUrl = URL.createObjectURL(file);
-      setpreviewurl(imageUrl);
-      console.log('preview url is:' + previewurl);
-      console.log('the url of new image is :'+imageUrl);
+      setPreviewurl(imageUrl);
       setCurrentItem(current => ({
         ...current,
         imgurl: imageUrl,
@@ -194,8 +186,7 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
     }
   };
 
-
-  const previewimageurl = (previewurl) || (`https://admin.applelegal.co/uploads/`+ currentItem?.imgurl) ;
+  const previewImageUrl = previewurl || (`https://admin.applelegal.co/uploads/` + currentItem?.imgurl);
 
   return (
     <div className="p-6 bg-white min-h-screen">
@@ -251,68 +242,64 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
 
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white p-5 w-[900px]  rounded-xl  shadow-lg">
-            <h2 className="text-2xl mb-4  font-bold">{currentItem?.id ? 'Edit File' : 'Add New File'}</h2>
+          <div className="bg-white p-5 w-[900px] rounded-xl shadow-lg">
+            <h2 className="text-2xl mb-4 font-bold">{currentItem?.id ? 'Edit File' : 'Add New File'}</h2>
             <div className='max-h-[80vh] overflow-y-auto'>
               <div className="relative flex">
                 <div className="w-1 bg-gray-500 absolute left-4 top-0 bottom-0"></div>
-                <div className="flex flex-col items-center mr-11 space-y-[90px]">
-                </div>
+                <div className="flex flex-col items-center mr-11 space-y-[90px]"></div>
                 <div className="flex-grow space-y-8 pr-5">
                   {/* Visa Details */}
                   <div>
                     <div className={`absolute left-1 w-6 h-6 rounded-full border-black border-2 ml-[1.5px] ${getSectionCompletion('visaDetails') ? 'bg-green-500' : 'bg-gray-300'}`}></div>
                     <h3 className="text-xl font-bold">Visa Details</h3>
                     <div className="flex w-full flex-row">
-                    <div className="grid grid-cols-2 gap-x-4 ">
-                      <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700">Visa Type</label>
-                        <select
-                          value={currentItem?.Visa_Type || ''}
-                          onChange={(e) => setCurrentItem({ ...currentItem, Visa_Type: e.target.value })}
-                          className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          required
-                        >
-                          <option key='' value='' disabled>Select Visa Type</option>
-                          {visaTypes.map(type => (
-                            <option key={type} value={type}>{type}</option>
-                          ))}
-                        </select>
+                      <div className="grid grid-cols-2 gap-x-4">
+                        <div className="mb-4">
+                          <label className="block text-sm font-medium text-gray-700">Visa Type</label>
+                          <select
+                            value={currentItem?.Visa_Type || ''}
+                            onChange={(e) => setCurrentItem({ ...currentItem, Visa_Type: e.target.value })}
+                            className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                          >
+                            <option key='' value='' disabled>Select Visa Type</option>
+                            {visaTypes.map(type => (
+                              <option key={type} value={type}>{type}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div className="mb-4">
+                          <label className="block text-sm font-medium text-gray-700">Visa Country</label>
+                          <select
+                            value={currentItem?.Visa_Country || ''}
+                            onChange={(e) => setCurrentItem({ ...currentItem, Visa_Country: e.target.value })}
+                            className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            required
+                          >
+                            <option key='' value='' disabled>Select Visa Country</option>
+                            {visaCountries.map(country => (
+                              <option key={country} value={country}>{country}</option>
+                            ))}
+                          </select>
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700">Status</label>
+                          <select value={currentItem?.status} onChange={(e) => setCurrentItem({ ...currentItem, status: e.target.value })} className="p-2 border border-gray-300 rounded w-full">
+                            <option value='' selected disabled>Select Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="initiated">Initiated</option>
+                            <option value="processing">Processing</option>
+                            <option value="approved">Approved</option>
+                            <option value="rejected">Rejected</option>
+                            <option value="completed">Completed</option>
+                          </select>
+                        </div>
                       </div>
-                      <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700">Visa Country</label>
-                        <select
-                          value={currentItem?.Visa_Country || ''}
-                          onChange={(e) => setCurrentItem({ ...currentItem, Visa_Country: e.target.value })}
-                          className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          required
-                        >
-                          <option key='' value='' disabled>Select Visa Country</option>
-                          {visaCountries.map(country => (
-                            <option key={country} value={country}>{country}</option>
-                          ))}
-                        </select>
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700">Status</label>
-                        <select value={currentItem?.status} onChange={(e) => setCurrentItem({ ...currentItem, status: e.target.value })} className="p-2 border border-gray-300 rounded w-full">
-                        <option  value='' selected disabled>Select Status</option>
-                          <option value="pending">Pending</option>
-                          <option value="initiated">Initiated</option>
-                          <option value="processing">Processing</option>
-                          <option value="approved">Approved</option>
-                          <option value="rejected">Rejected</option>
-                          <option value="completed">Completed</option>
-                        </select>
+                      <div className="ml-7 mx-auto flex justify-center items-center">
+                        <img src={previewImageUrl} alt="Preview" className='w-[200px] h-[200px] rounded-xl' />
                       </div>
                     </div>
-                    <div className="ml-7 mx-auto flex justify-center items-center">
-                        
-                      <img src={ previewimageurl} placeholder='image' className='w-[200px] h-[200px] rounded-xl'/>
-                          
-                      </div>
-                      </div>
                   </div>
                   {/* Personal Information Section */}
                   <div>
@@ -341,9 +328,6 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
                       </div>
                       <div className="flex mb-4">
                         <div className='flex flex-col justify-center'>
-{/*                           
-                            <img src={ previewimageurl} placeholder='image' className='w-[100px] h-[100px]'/>
-                           */}
                           <label className="block text-sm font-medium text-gray-700">Image</label>
                           <input type="file" onChange={handleImageChange} className="p-2 border border-gray-300 rounded w-full" accept="image/*" />
                         </div>
@@ -428,19 +412,18 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
                         />
                       </div>
                       <div className="mb-4">
-  <label className="block text-sm font-medium text-gray-700">Gender</label>
-  <select
-    value={currentItem?.Gender || ''}
-    onChange={(e) => setCurrentItem({ ...currentItem, Gender: e.target.value })}
-    className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-    required
-  >
-    <option value="" disabled>Select Gender</option>
-    <option value="Male">Male</option>
-    <option value="Female">Female</option>
-  </select>
-</div>
-
+                        <label className="block text-sm font-medium text-gray-700">Gender</label>
+                        <select
+                          value={currentItem?.Gender || ''}
+                          onChange={(e) => setCurrentItem({ ...currentItem, Gender: e.target.value })}
+                          className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          required
+                        >
+                          <option value="" disabled>Select Gender</option>
+                          <option value="Male">Male</option>
+                          <option value="Female">Female</option>
+                        </select>
+                      </div>
                       <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700">Age</label>
                         <input
@@ -491,19 +474,18 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
                     <div className={`absolute left-1 w-6 h-6 rounded-full border-black border-2 ml-[1.5px] ${getSectionCompletion('otherDetails') ? 'bg-green-500' : 'bg-gray-300'}`}></div>
                     <h3 className="text-xl font-bold">Other Information</h3>
                     <div className="grid grid-cols-3 gap-4">
-                    <div className="mb-4">
-  <label className="block text-sm font-medium text-gray-700">Marital Status</label>
-  <select
-    value={currentItem?.Marital_Status || ''}
-    onChange={(e) => setCurrentItem({ ...currentItem, Marital_Status: e.target.value })}
-    className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-  >
-    <option value="" disabled>Select Marital Status</option>
-    <option value="Single">Single</option>
-    <option value="Married">Married</option>
-  </select>
-</div>
-
+                      <div className="mb-4">
+                        <label className="block text-sm font-medium text-gray-700">Marital Status</label>
+                        <select
+                          value={currentItem?.Marital_Status || ''}
+                          onChange={(e) => setCurrentItem({ ...currentItem, Marital_Status: e.target.value })}
+                          className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        >
+                          <option value="" disabled>Select Marital Status</option>
+                          <option value="Single">Single</option>
+                          <option value="Married">Married</option>
+                        </select>
+                      </div>
                       <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700">NTN No</label>
                         <input
@@ -540,17 +522,16 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
                           className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
                         />
                       </div>
-                      
                     </div>
                     <div className="mb-4">
-                        <label className="block text-sm font-medium text-gray-700">Note</label>
-                        <textarea
-                          value={currentItem?.Note || ''}
-                          onChange={(e) => setCurrentItem({ ...currentItem, Note: e.target.value })}
-                          className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          rows="3"
-                        ></textarea>
-                      </div>
+                      <label className="block text-sm font-medium text-gray-700">Note</label>
+                      <textarea
+                        value={currentItem?.Note || ''}
+                        onChange={(e) => setCurrentItem({ ...currentItem, Note: e.target.value })}
+                        className="mt-1 p-2 border border-gray-300 rounded w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        rows="3"
+                      ></textarea>
+                    </div>
                   </div>
                   {/* File Upload Section */}
                   <div>
@@ -561,12 +542,12 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
                       <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700">Select Image Type</label>
                         <select value={type} onChange={handleTypeChange} className="mt-1 p-2 border border-gray-300 rounded w-full">
-                        <option key='' value='' selected>Select image type</option>
-                        {filetypes.map((fileType, index) => (
-          <option key={index} value={fileType.title}>
-            {fileType.title}
-          </option>
-        ))}
+                          <option key='' value='' selected>Select image type</option>
+                          {filetypes.map((fileType, index) => (
+                            <option key={index} value={fileType.title}>
+                              {fileType.title}
+                            </option>
+                          ))}
                         </select>
                       </div>
                       <div className="mb-4">
@@ -580,19 +561,18 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
                         Add Image
                       </button>
                       {images.length > 0 && (
-  <div>
-    <h2 className="text-xl mb-4">Selected Images</h2>
-    <ul className="list-disc pl-5">
-      {images.map((img, index) => (
-        <li key={index} className="flex justify-between items-center">
-          <strong>Type:</strong> {img.type} - <img src={img.base64} alt={img.type} className="w-16 h-16 inline-block" />
-          <button onClick={() => handleRemoveImage(index)} className="text-red-500 hover:text-red-700 ml-4">Remove</button>
-        </li>
-      ))}
-    </ul>
-  </div>
-)}
-
+                        <div>
+                          <h2 className="text-xl mb-4">Selected Images</h2>
+                          <ul className="list-disc pl-5">
+                            {images.map((img, index) => (
+                              <li key={index} className="flex justify-between items-center">
+                                <strong>Type:</strong> {img.type} - <img src={img.base64} alt={img.type} className="w-16 h-16 inline-block" />
+                                <button onClick={() => handleRemoveImage(index)} className="text-red-500 hover:text-red-700 ml-4">Remove</button>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
                     </div>
                     <div className="flex justify-end space-x-2 mt-4">
                       <button

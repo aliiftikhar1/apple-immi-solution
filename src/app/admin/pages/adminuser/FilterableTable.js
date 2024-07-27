@@ -31,7 +31,7 @@ const FilterableTable = ({ data, fetchData,userRole, userBranch }) => {
     if (userRole === 'manager') {
       filtered = filtered.filter(item => (item.branch === userBranch && item.branch !== 'super admin'));
       console.log(filtered)
-      console.log(userBranch)
+      console.log("User branch is"+userBranch)
       console.log(userRole)
       setFilteredData(filtered)
       

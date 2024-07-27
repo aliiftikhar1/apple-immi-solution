@@ -39,9 +39,7 @@ export async function GET(request) {
       WHERE AdminUser.branch = ${bcode} AND Customer.Visa_Country = ${country}
     `;
 
-    const images = await prisma.images.findMany();
-
-    return NextResponse.json({ customer, images });
+    return NextResponse.json(customer);
   } catch (error) {
     console.error('Error fetching customer:', error);
     return NextResponse.json(

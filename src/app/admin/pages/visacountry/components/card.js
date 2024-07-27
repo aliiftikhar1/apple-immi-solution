@@ -135,22 +135,22 @@ const UserDetailsCard = ({ item, handleEditItem, handleDeleteItem }) => {
             <h2 className="text-2xl font-semibold">{item.Full_Name}</h2>
             <p className="text-sm text-gray-500 flex justify-center items-center">{item.status}
               {item.status === 'processing' && (
-                <div className='rounded-full bg-orange-500 w-[10px] h-[10px] mx-2 my-2'></div>
+                <span className='rounded-full bg-orange-500 w-[10px] h-[10px] mx-2 my-2'></span>
               )}
               {item.status === 'initiated' && (
-                <div className='rounded-full bg-blue-500 w-[10px] h-[10px] mx-2 my-2'></div>
+                <span className='rounded-full bg-blue-500 w-[10px] h-[10px] mx-2 my-2'></span>
               )}
               {item.status === 'pending' && (
-                <div className='rounded-full bg-yellow-500 w-[10px] h-[10px] mx-2 my-2'></div>
+                <span className='rounded-full bg-yellow-500 w-[10px] h-[10px] mx-2 my-2'></span>
               )}
               {item.status === 'Rejected' && (
-                <div className='rounded-full bg-red-500 w-[10px] h-[10px] mx-2 my-2'></div>
+                <span className='rounded-full bg-red-500 w-[10px] h-[10px] mx-2 my-2'></span>
               )}
               {item.status === 'approved' && (
-                <div className='rounded-full bg-green-300 w-[10px] h-[10px] mx-2 my-2'></div>
+                <span className='rounded-full bg-green-300 w-[10px] h-[10px] mx-2 my-2'></span>
               )}
               {item.status === 'completed' && (
-                <div className='rounded-full bg-green-600 w-[10px] h-[10px] mx-2 my-2'></div>
+                <span className='rounded-full bg-green-600 w-[10px] h-[10px] mx-2 my-2'></span>
               )}
             </p>
             <p className="text-sm text-gray-500">{item.Visa_Type}</p>
