@@ -24,7 +24,8 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
   const [previewurl, setpreviewurl] = useState('');
   //-----------------------------------------
 
-  let filtered = data;
+  useEffect(() => {
+    let filtered = data;
 
     if (userRole === 'employee') {
       filtered = filtered.filter(item => item.addedby === userId);
@@ -44,9 +45,7 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
         .catch(error => {
           console.error('Error fetching branch users:', error);
         });
-    } 
-  useEffect(() => {
-    
+    } else {
       setFilteredData(
         filtered.filter(item =>
           Object.values(item).some(val =>
@@ -54,8 +53,8 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
           )
         )
       );
-    
-  }, [filter]);
+    }
+  }, [filter, data, filetypes, userRole, userId, userBranch]);
 
   //------------------------Image  Upload----------------
   const handleFileChange = (e) => {

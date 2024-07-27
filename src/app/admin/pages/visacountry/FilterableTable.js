@@ -24,13 +24,13 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
   const [previewurl, setpreviewurl] = useState('');
   //-----------------------------------------
 
-  let filtered = data;
+  useEffect(() => {
+    let filtered = data;
     if (userRole === 'employee') {
       filtered = filtered.filter(item => item.addedby === userId);
       setFilteredData(filtered);
     }
-  useEffect(() => {
-    
+     else {
       setFilteredData(
         filtered.filter(item =>
           Object.values(item).some(val =>
@@ -38,7 +38,7 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
           )
         )
       );
-    
+    }
   }, [filter, data, filetypes, userRole, userId, userBranch]);
 
   //------------------------Image  Upload----------------
