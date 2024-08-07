@@ -83,6 +83,7 @@ const Sidebar = ({ setActiveComponent }) => {
           {(userRole === 'manager' ||
             userRole === 'employee' ||
             userRole === 'super admin') && (
+              <>
             <li>
               <button
                 className="flex items-center w-full p-2 hover:bg-blue-700 rounded focus:outline-none"
@@ -104,6 +105,28 @@ const Sidebar = ({ setActiveComponent }) => {
                 </ul>
               )}
             </li>
+            <li>
+            <button
+              className="flex items-center w-full p-2 hover:bg-blue-700 rounded focus:outline-none"
+              onClick={() => toggleDropdown('filetypes')}
+            >
+              <DocumentTextIcon className="h-5 w-5" />
+              <span className="ml-2">Filetypes</span>
+              <ChevronDownIcon className="h-5 w-5 ml-auto" />
+            </button>
+            {isDropdownOpen.filetypes && (
+              <ul className="ml-8 mt-2 space-y-2">
+                <li>
+                  <a href="/admin/pages/filetype">
+                    <button className="flex w-full items-center p-2 hover:bg-blue-700 rounded">
+                      <span className="ml-2">View Filetypes</span>
+                    </button>
+                  </a>
+                </li>
+              </ul>
+            )}
+          </li>
+          </>
           )}
           {(userRole === 'manager' || userRole === 'super admin') && (
             <>
@@ -153,27 +176,7 @@ const Sidebar = ({ setActiveComponent }) => {
                   </ul>
                 )}
               </li>
-              <li>
-                <button
-                  className="flex items-center w-full p-2 hover:bg-blue-700 rounded focus:outline-none"
-                  onClick={() => toggleDropdown('filetypes')}
-                >
-                  <DocumentTextIcon className="h-5 w-5" />
-                  <span className="ml-2">Filetypes</span>
-                  <ChevronDownIcon className="h-5 w-5 ml-auto" />
-                </button>
-                {isDropdownOpen.filetypes && (
-                  <ul className="ml-8 mt-2 space-y-2">
-                    <li>
-                      <a href="/admin/pages/filetype">
-                        <button className="flex w-full items-center p-2 hover:bg-blue-700 rounded">
-                          <span className="ml-2">View Filetypes</span>
-                        </button>
-                      </a>
-                    </li>
-                  </ul>
-                )}
-              </li>
+              
             </>
           )}
           {(userRole === 'manager' ||
