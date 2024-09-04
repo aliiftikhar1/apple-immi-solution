@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { FaTimes, FaEdit, FaTrash, FaEye } from 'react-icons/fa';
+import { FaTimes, FaEdit, FaTrash, FaEye, FaStreetView } from 'react-icons/fa';
 import Cookies from 'js-cookie';
 import { jwtDecode } from 'jwt-decode';
+import { EyeDropperIcon, EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 
 const AdminDetailsCard = ({ admin, handleEditAdmin, handleDeleteAdmin }) => {
   const [userId, setUserId] = useState('');
@@ -73,6 +74,7 @@ const AdminDetailsCard = ({ admin, handleEditAdmin, handleDeleteAdmin }) => {
           {admin.role === 'employee' && (
             <p className="text-md text-gray-500">
               Files added: {isLoadingFiles ? 'Loading...' : fileCount}
+              
             </p>
           )}
           <div className="p-4 flex justify-center items-center">
@@ -102,15 +104,21 @@ const AdminDetailsCard = ({ admin, handleEditAdmin, handleDeleteAdmin }) => {
                       <tr><th>City:</th><td>{admin.city}</td></tr>
                       <tr><th>Country:</th><td>{admin.country}</td></tr>
                       {admin.role === 'employee' && (
-  <p className="text-md text-gray-500">
-    Files added: {isLoadingFiles ? (
+                      <tr><th> Files added:</th><td> {isLoadingFiles ? (
       <span className="relative flex h-3 w-3">
         <span className="absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75 animate-ping"></span>
         <span className="relative inline-flex rounded-full h-3 w-3 bg-blue-500"></span>
         <span className="ml-2">Loading...</span>
       </span>
-    ) : fileCount}
-  </p>
+    ) : (
+      <div className='flex gap-4 justify-start items-center'>
+      {fileCount}
+      <a className='' href={`/admin/pages/employeefiles/${admin.id}` }>
+              <EyeIcon width={20} />
+              </a>
+      </div>
+      )}</td></tr>
+   
 )}
 
                     </tbody>
