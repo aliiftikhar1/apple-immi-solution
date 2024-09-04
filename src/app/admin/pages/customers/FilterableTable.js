@@ -24,45 +24,66 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
   const [previewurl, setpreviewurl] = useState('');
   //-----------------------------------------
 
-  useEffect(() => {
-    let filtered = data;
+  // useEffect(() => {
+  //   let filtered = data;
 
+  //   if (userRole === 'employee') {
+  //     filtered = filtered.filter(item => item.addedby === userId);
+  //   }
+  //   if (userRole === 'manager') {
+  //     fetch(`/api/branchuser/${userId}`)
+  //       .then(response => response.json())
+  //       .then(branchUsers => {
+  //         setFilteredData(
+  //           branchUsers.filter(item =>
+  //             Object.values(item).some(val =>
+  //               String(val).toLowerCase().includes(filter.toLowerCase())
+  //             )
+  //           )
+  //         );
+  //       })
+  //       .catch(error => {
+  //         console.error('Error fetching branch users:', error);
+  //       });
+  //   } else {
+  //     setFilteredData(
+  //       filtered.filter(item =>
+  //         Object.values(item).some(val =>
+  //           String(val).toLowerCase().includes(filter.toLowerCase())
+  //         )
+  //       )
+  //     );
+  //   }
+  // }, [filter, data, filetypes, userRole, userId, userBranch]);
+
+  const getFilteredData = () => {
+    let filtered = data;
+  
+    // If the user is an employee, filter by their ID
     if (userRole === 'employee') {
       filtered = filtered.filter(item => item.addedby === userId);
+    } 
+    // If the user is a manager, filter by their branch
+    else if (userRole === 'manager') {
+      filtered = filtered.filter(item => item.branch === userBranch);
     }
-    if (userRole === 'manager') {
-      fetch(`/api/branchuser/${userId}`)
-        .then(response => response.json())
-        .then(branchUsers => {
-          setFilteredData(
-            branchUsers.filter(item =>
-              Object.values(item).some(val =>
-                String(val).toLowerCase().includes(filter.toLowerCase())
-              )
-            )
-          );
-        })
-        .catch(error => {
-          console.error('Error fetching branch users:', error);
-        });
-    } else {
-      setFilteredData(
-        filtered.filter(item =>
-          Object.values(item).some(val =>
-            String(val).toLowerCase().includes(filter.toLowerCase())
-          )
-        )
-      );
-    }
-  }, [filter, data, filetypes, userRole, userId, userBranch]);
+  
+    // Apply search filter
+    return filtered.filter(item =>
+      Object.values(item).some(val =>
+        String(val).toLowerCase().includes(filter.toLowerCase())
+      )
+    );
+  };
+  
 
   //------------------------Image  Upload----------------
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
-    if (selectedFile.size > 200 * 1024) { // 200KB in bytes
-      alert('File size must be less than 200KB');
-      return;
-    }
+    // if (selectedFile.size > 200 * 1024) { // 200KB in bytes
+    //   alert('File size must be less than 200KB');
+    //   return;
+    // }
     setFile(selectedFile);
   };
   
@@ -72,10 +93,10 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
   };
 
   const handleAddImage = () => {
-    if (!type || !file || images.some(img => img.type === type)) {
-      alert('Please select a type and choose an image. Each type must have exactly one image.');
-      return;
-    }
+    // if (!type || !file || images.some(img => img.type === type)) {
+    //   alert('Please select a type and choose an image. Each type must have exactly one image.');
+    //   return;
+    // }
 
     const reader = new FileReader();
     reader.onloadend = () => {
@@ -252,7 +273,7 @@ const FilterableTable = ({ data, userRole, userBranch, userId, filetypedata, fet
           </div>
         )}
         <div className="grid grid-cols-3 gap-4">
-          {filteredData.map((item, index) => (
+          {getFilteredData().map((item, index) => (
             <UserDetailsCard
               key={index}
               item={item}
